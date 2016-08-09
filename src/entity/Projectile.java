@@ -4,17 +4,19 @@ import graphics.Screen;
 import graphics.Sprite;
 
 public class Projectile extends Entity {
-	private int[] forceVector;
+	private double[] forceVector = new double[2];
 	private long time, deltaTime;
 	private final double gravity = -90;
 	private double xStart, yStart;
 
-	public Projectile(int x, int y, int[] forceVector) {
+	public Projectile(int x, int y, double[] forceVector, int scalar) {
 		this.x = x;
 		this.y = y;
 		xStart = x;
 		yStart = y;
-		this.forceVector = forceVector;
+		for(int i = 0; i < forceVector.length; i++){
+			this.forceVector[i] = forceVector[i] * scalar;
+		}
 		time = System.currentTimeMillis();
 	}
 

@@ -5,7 +5,7 @@ import graphics.Screen;
 public abstract class Menu {
 
 	public static Menu main = new Main();
-	public static Menu lobby = new Lobby();
+	public static Menu lobby = new Lobby(); //Change to a Lobby object and remove static variables
 	
 	protected Button[] buttons;
 

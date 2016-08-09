@@ -12,7 +12,7 @@ public class Button {
 	public static Button multiplayer = new Button(Sprite.button, "Multiplayer");
 	public static Button options = new Button(Sprite.button, "Options");
 	public static Button numberOfPlayers = new Button(Sprite.button, "1");
-	public static Button roundTime = new Button(Sprite.button, "30");
+	public static Button roundTime = new Button(Sprite.button, "15");
 	public static Button level = new Button(Sprite.button, "Ent");
 	public static Button start = new Button(Sprite.button, "Start");
 	

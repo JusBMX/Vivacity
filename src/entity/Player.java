@@ -7,7 +7,7 @@ import graphics.Sprite;
 public class Player extends Entity {
 
 	public boolean active;
-	public int hp = 10;
+	public int hp = 100;
 	
 	public boolean[] collisionMask;
 
@@ -20,7 +20,7 @@ public class Player extends Entity {
 		if (active) {
 			if (Game.mouse.getButton() == 1) {
 				Game.mouse.setMouseButton(-1);
-				Projectile bobmb = new Projectile(x, y, new int[] { (int) (200 * Game.mouse.directionVector(Game.RES_X, Game.RES_Y)[0]), (int) (200 * Game.mouse.directionVector(Game.RES_X, Game.RES_Y)[1]) });
+				Projectile bobmb = new Projectile(x, y, Game.mouse.directionVector(Game.RES_X, Game.RES_Y), 200);
 				bobmb.intit(level);
 				level.addEntity(bobmb);
 
