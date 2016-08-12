@@ -8,7 +8,10 @@ public class Player extends Entity {
 
 	public boolean active;
 	public int hp = 100;
-	
+
+	private int force = 0;
+	private boolean switcher, fire;
+
 	public boolean[] collisionMask;
 
 	public Player(int x, int y) {
@@ -19,11 +22,26 @@ public class Player extends Entity {
 	public void tick() {
 		if (active) {
 			if (Game.mouse.getButton() == 1) {
-				Game.mouse.setMouseButton(-1);
-				Projectile bobmb = new Projectile(x, y, Game.mouse.directionVector(Game.RES_X, Game.RES_Y), 200);
+				fire = true;
+				if(force <= 0 ){
+					switcher = true;
+				}
+				if (force >= 350){
+					switcher = false;
+				}
+				if(switcher){
+					force += 5;
+				}else{
+					force -= 5;
+				}
+			}
+			if(Game.mouse.getButton() == -1 && fire){
+				//Generate player collision here
+				Projectile bobmb = new Projectile(x, y, Game.mouse.directionVector(Game.RES_X, Game.RES_Y), force);
 				bobmb.intit(level);
 				level.addEntity(bobmb);
-
+				fire = false;
+				force = 0;
 			}
 			if (Game.keys.left) {
 				for (int i = 0; i < 5; i++) {
@@ -54,11 +72,12 @@ public class Player extends Entity {
 			y++;
 		}
 	}
-	
+
 	@Override
 	public void render(Screen screen) {
 		screen.renderSprite(x - Sprite.player.getWidth() / 2, y - Sprite.player.getHeight() / 2, Sprite.player, true);
 		screen.renderText(Integer.toString(hp), x, y, true);
+		screen.renderText("Force: " + Integer.toString(force), 10, 16, false);
 	}
 
 }

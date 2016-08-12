@@ -13,7 +13,6 @@ import graphics.Screen;
 import input.Keyboard;
 import input.Mouse;
 import level.Level;
-import ui.Lobby;
 import ui.Menu;
 
 public class Game extends Canvas implements Runnable {
@@ -73,7 +72,7 @@ public class Game extends Canvas implements Runnable {
 			frames++;
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				frame.setTitle("Ticks: " + updates + ", FPS: " + frames);
+				frame.setTitle("Ticks: " + updates + ", FPS: " + frames + ", Pre 0.0.1");
 				frames = 0;
 				updates = 0;
 			}
@@ -103,9 +102,9 @@ public class Game extends Canvas implements Runnable {
 			Menu.lobby.tick();
 		} else if (state == State.GAME) {
 			if (level == null) {
-				level = Lobby.getlevel();
-				timer = new GameTimer(Lobby.getRoundTime() * 1000);
-				for (int i = 0; i < Lobby.getNumberOfPlayers(); i++) {
+				level = Menu.lobby.getlevel();
+				timer = new GameTimer(Menu.lobby.getRoundTime() * 1000);
+				for (int i = 0; i < Menu.lobby.getNumberOfPlayers(); i++) {
 					Player player = new Player(120 + i * 60, 120);
 					if (i == 0) {
 						player.active = true;
@@ -119,7 +118,6 @@ public class Game extends Canvas implements Runnable {
 					for (Player p : level.getPlayers()) {
 						if (p.active) {
 							p.active = false;
-							System.out.println();
 							level.getPlayers().get((level.getPlayers().indexOf(p) + 1) % level.getPlayers().size()).active = true;
 							break;
 						}
@@ -147,12 +145,9 @@ public class Game extends Canvas implements Runnable {
 		} else if (state == State.GAME) {
 			if (level != null) {
 				level.render(screen);
-				screen.renderText("Time left: " + Integer.toString(timer.timeLeft()), 300, 16, false);
+				screen.renderText("Time left: " + Integer.toString(timer.timeLeft()), 250, 16, false);
 			}
 		}
-
-		// screen.renderText("X:" + mouse.screenToWorld(screen)[0] + " Y:" +
-		// mouse.screenToWorld(screen)[1], 10, 10, false);
 
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];

@@ -7,22 +7,22 @@ import level.Level;
 
 public class Lobby extends Menu {
 
-	private static int numberOfPlayers = 1, roundTime = 15;
-	private static Level level = Level.ent;
+	private int numberOfPlayers = 1, roundTime = 15;
+	private Level level = Level.ent;
 
 	public Lobby() {
 		buttons = new Button[] { Button.numberOfPlayers, Button.roundTime, Button.level, Button.start };
 	}
 
-	public static int getNumberOfPlayers() {
+	public int getNumberOfPlayers() {
 		return numberOfPlayers;
 	}
 
-	public static int getRoundTime() {
+	public int getRoundTime() {
 		return roundTime;
 	}
 
-	public static Level getlevel() {
+	public Level getlevel() {
 		return level;
 	}
 
