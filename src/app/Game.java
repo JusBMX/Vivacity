@@ -8,28 +8,24 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
-import entity.Player;
 import graphics.Screen;
 import input.Keyboard;
 import input.Mouse;
-import level.Level;
-import ui.Menu;
 
 public class Game extends Canvas implements Runnable {
 
 	private JFrame frame;
 	private Thread thread;
-	private Level level;
-	private GameTimer timer;
 	private boolean running;
+	private GameController gc;
+
 	public static Screen screen;
-	public static State state;
 	public static Keyboard keys;
 	public static Mouse mouse;
 
 	private static final long serialVersionUID = 1L;
-	private static final int SCALE = 2;
-	public static final int RES_X = 640, RES_Y = 360;
+	public static final int SCALE = 2;
+	private static final int RES_X = 640, RES_Y = 360;
 
 	private BufferedImage image = new BufferedImage(RES_X, RES_Y, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -39,7 +35,7 @@ public class Game extends Canvas implements Runnable {
 		screen = new Screen(RES_X, RES_Y);
 		keys = new Keyboard();
 		mouse = new Mouse();
-		state = State.MAINMENU;
+		gc = new GameController();
 		frame = new JFrame("Game");
 		frame.setPreferredSize(res);
 		frame.setResizable(false);
@@ -96,37 +92,7 @@ public class Game extends Canvas implements Runnable {
 
 	public void tick() {
 		keys.tick();
-		if (state == State.MAINMENU) {
-			Menu.main.tick();
-		} else if (state == State.LOBBY) {
-			Menu.lobby.tick();
-		} else if (state == State.GAME) {
-			if (level == null) {
-				level = Menu.lobby.getlevel();
-				timer = new GameTimer(Menu.lobby.getRoundTime() * 1000);
-				for (int i = 0; i < Menu.lobby.getNumberOfPlayers(); i++) {
-					Player player = new Player(120 + i * 60, 120);
-					if (i == 0) {
-						player.active = true;
-					}
-					level.addEntity(player);
-					player.intit(level);
-				}
-
-			} else {
-				if (timer.isTime()) {
-					for (Player p : level.getPlayers()) {
-						if (p.active) {
-							p.active = false;
-							level.getPlayers().get((level.getPlayers().indexOf(p) + 1) % level.getPlayers().size()).active = true;
-							break;
-						}
-					}
-				}
-				level.tick();
-				screen.setOffset(level.getActivePlayer().x - RES_X / SCALE, level.getActivePlayer().y - RES_Y / SCALE);
-			}
-		}
+		gc.tick();
 	}
 
 	public void render() {
@@ -137,17 +103,7 @@ public class Game extends Canvas implements Runnable {
 		}
 
 		screen.clear();
-
-		if (state == State.MAINMENU) {
-			Menu.main.render(screen);
-		} else if (state == State.LOBBY) {
-			Menu.lobby.render(screen);
-		} else if (state == State.GAME) {
-			if (level != null) {
-				level.render(screen);
-				screen.renderText("Time left: " + Integer.toString(timer.timeLeft()), 250, 16, false);
-			}
-		}
+		gc.render(screen);
 
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];

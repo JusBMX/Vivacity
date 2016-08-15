@@ -6,8 +6,9 @@ import graphics.Sprite;
 public class Button {
 	private int width, height, x, y;
 	private Sprite sprite;
-	public String text;
 	
+	public String text;
+
 	public static Button singleplayer = new Button(Sprite.button, "Singleplayer");
 	public static Button multiplayer = new Button(Sprite.button, "Multiplayer");
 	public static Button options = new Button(Sprite.button, "Options");
@@ -15,7 +16,8 @@ public class Button {
 	public static Button roundTime = new Button(Sprite.button, "15");
 	public static Button level = new Button(Sprite.button, "Ent");
 	public static Button start = new Button(Sprite.button, "Start");
-	
+	public static Button back = new Button(Sprite.button, "Back");
+
 	public Button(Sprite sprite, String text) {
 		this.width = Sprite.button.getWidth();
 		this.height = Sprite.button.getHeight();
@@ -30,15 +32,8 @@ public class Button {
 		screen.renderText(text, (x + width / 2) - text.length() * 4, y + 4, false);
 	}
 
-	public Button onButton(int x, int y){
-		if((x >= this.x && x <= this.x + width) && (y >= this.y && y <= this.y + height)){
-			return this;
-		}
-		return null;
-	}
-	
-	public Button onButton(int[] coord){
-		if((coord[0] >= x && coord[0] <= x + width) && (coord[1] >= y && coord[1] <= y + height)){
+	public Button onButton(int[] coord) {
+		if ((coord[0] >= x && coord[0] <= x + width) && (coord[1] >= y && coord[1] <= y + height)) {
 			return this;
 		}
 		return null;
@@ -60,8 +55,8 @@ public class Button {
 		return height;
 	}
 
-	public Sprite getSprite(){
+	public Sprite getSprite() {
 		return sprite;
 	}
-	
+
 }

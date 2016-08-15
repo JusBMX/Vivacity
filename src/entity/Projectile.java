@@ -30,9 +30,8 @@ public class Projectile extends Entity {
 		}
 		deltaTime = System.currentTimeMillis() - time;
 		y = (int) (yStart + (forceVector[1] * deltaTime / 1000D)
-				- (1D / 2D) * gravity * Math.pow(deltaTime / 1000D, 2));
+				- (.5D) * gravity * Math.pow(deltaTime / 1000D, 2));
 		x = (int) (xStart + forceVector[0] * deltaTime / 1000D);
-
 	}
 
 	public void crater(int x, int y, int radius) {
@@ -42,7 +41,7 @@ public class Projectile extends Entity {
 			equationY = Math.sqrt(-Math.pow(i - radius, 2) + Math.pow(radius, 2));
 			for (int j = 0; j < equationY * 2; j++) {
 				try {
-					Sprite.ent.pixels[(x + i) + (y + j - (int) equationY) * Sprite.ent.getWidth()] = 0xFFFF00FF;
+					level.foreground.pixels[(x + i) + (y + j - (int) equationY) * level.foreground.getWidth()] = 0xFFFF00FF;
 				} catch (ArrayIndexOutOfBoundsException e) {
 					continue;
 				}

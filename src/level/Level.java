@@ -7,31 +7,43 @@ import entity.Entity;
 import entity.Player;
 import graphics.Screen;
 import graphics.Sprite;
+import graphics.SpriteSheet;
 
-public class Level {
+public abstract class Level {
 
-	public int width;
-	protected int height;
-	public boolean[] collisionMask;
+	private int width, height;
+	public Sprite foreground;
+	public boolean[][] collisionMask;
 
-	private List<Entity> entities = new ArrayList<Entity>();
+	private List<Entity> entities;
 
-	public static Level ent = new Level(Sprite.ent_bg, Sprite.ent);
+	public static Level ent = new Ent(Sprite.ent_bg, Sprite.ent);
 
-	public Level(Sprite Background, Sprite Foreground) {
-		loadLevel();
-	}
-
-	protected void loadLevel() {
-		generateCollisionMask();
-		width = Sprite.ent.getWidth();
-		height = Sprite.ent.getHeight();
+	public Level(Sprite background, Sprite foreground) {
+		this.foreground = new Sprite(512, 1024, 0, 0, SpriteSheet.level);
+		width = foreground.getWidth();
+		height = foreground.getHeight();
+		collisionMask = new boolean[width][height];
 	}
 
 	public void tick() {
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).tick();
 		}
+	}
+	
+	public void render(Screen screen) {
+		screen.renderSprite(0, 0, Sprite.ent_bg, false);
+		screen.renderSprite(0, 0, foreground, true);
+		for (Entity e : entities) {
+			e.render(screen);
+		}
+	}
+	
+	public void loadLevel() {
+		foreground = new Sprite(512, 1024, 0, 0, SpriteSheet.level);
+		generateCollisionMask();
+		entities = new ArrayList<Entity>();
 	}
 
 	public void addEntity(Entity e) {
@@ -66,23 +78,33 @@ public class Level {
 	}
 
 	public void generateCollisionMask() {
-		collisionMask = new boolean[Sprite.ent.pixels.length];
-		for (int i = 0; i < Sprite.ent.pixels.length; i++) {
-			if (Sprite.ent.pixels[i] == 0xFFFF00FF) {
-				collisionMask[i] = false;
-			} else {
-				collisionMask[i] = true;
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (foreground.pixels[i + j * foreground.getWidth()] == 0xFFFF00FF) {
+					collisionMask[i][j] = false;
+				} else {
+					collisionMask[i][j] = true;
+				}
 			}
 		}
 	}
 
-	public void render(Screen screen) {
-		screen.renderSprite(0, 0, Sprite.ent_bg, false);
-		screen.renderSprite(0, 0, Sprite.ent, true);
-
-		for (Entity e : entities) {
-			e.render(screen);
+	public void generatePlayerCollisionMask() {
+		for (Player p : getPlayers()) {
+			if (p == getActivePlayer()) {
+				continue;
+			}
+			for (int i = 0; i < Sprite.player.getWidth(); i++) {
+				for (int j = 0; j < Sprite.player.getHeight(); j++) {
+					if (Sprite.player.pixels[i + j * Sprite.player.getWidth()] == 0xFFFF00FF) {
+						collisionMask[i + p.x - Sprite.player.getWidth() / 2][j + p.y
+								- Sprite.player.getHeight() / 2] = false;
+					} else {
+						collisionMask[i + p.x - Sprite.player.getWidth() / 2][j + p.y
+								- Sprite.player.getHeight() / 2] = true;
+					}
+				}
+			}
 		}
 	}
-
 }

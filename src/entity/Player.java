@@ -36,8 +36,8 @@ public class Player extends Entity {
 				}
 			}
 			if(Game.mouse.getButton() == -1 && fire){
-				//Generate player collision here
-				Projectile bobmb = new Projectile(x, y, Game.mouse.directionVector(Game.RES_X, Game.RES_Y), force);
+				level.generatePlayerCollisionMask();
+				Projectile bobmb = new Projectile(x, y, Game.mouse.directionVector(x, y), force);
 				bobmb.intit(level);
 				level.addEntity(bobmb);
 				fire = false;
@@ -72,7 +72,7 @@ public class Player extends Entity {
 			y++;
 		}
 	}
-
+	
 	@Override
 	public void render(Screen screen) {
 		screen.renderSprite(x - Sprite.player.getWidth() / 2, y - Sprite.player.getHeight() / 2, Sprite.player, true);
