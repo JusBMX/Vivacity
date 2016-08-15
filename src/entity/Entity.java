@@ -13,9 +13,9 @@ public abstract class Entity {
 
 	public boolean collision(int xAbs, int yAbs) {
 		try{
-			return level.collisionMask[xAbs + yAbs * level.width];
+			return level.collisionMask[xAbs][yAbs];
 		}catch(ArrayIndexOutOfBoundsException e){
-			return true;
+			return false;
 		}
 	}
 

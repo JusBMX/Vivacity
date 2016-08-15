@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import graphics.Screen;
+import app.Game;
 
 public class Mouse implements MouseListener, MouseMotionListener {
 
@@ -58,16 +58,21 @@ public class Mouse implements MouseListener, MouseMotionListener {
 		mouseButton = -1;
 	}
 
-	public int[] screenToWorld(Screen screen) {
-		int[] coords = { screen.xOffset + mouseX / 2, screen.yOffset + mouseY / 2};
+	public int[] screenToWorld(boolean inclueOffset) {
+		int[] coords;
+		if (inclueOffset) {
+			coords = new int[] { Game.screen.xOffset + mouseX / Game.SCALE, Game.screen.yOffset + mouseY / Game.SCALE };
+		} else {
+			coords = new int[] { mouseX / Game.SCALE, mouseY / Game.SCALE };
+		}
 		return coords;
 	}
 
 	public double[] directionVector(int originX, int originY) {
-		double magnitue = Math.sqrt(Math.pow(mouseX - originX, 2) + Math.pow(mouseY - originY, 2));
+		double magnitue = Math.sqrt(Math.pow(screenToWorld(true)[0] - originX, 2) + Math.pow(screenToWorld(true)[1] - originY, 2));
 		double[] vector = new double[2];
-		vector[0] = (mouseX - originX) / magnitue;
-		vector[1] = (mouseY - originY) / magnitue;
+		vector[0] = (screenToWorld(true)[0] - originX) / magnitue;
+		vector[1] = (screenToWorld(true)[1] - originY) / magnitue;
 		return vector;
 	}
 

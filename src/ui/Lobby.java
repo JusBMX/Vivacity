@@ -1,42 +1,81 @@
 package ui;
 
 import app.Game;
+import app.GameController;
 import app.State;
 import graphics.Screen;
 import level.Level;
 
-public class Lobby extends Menu {
+public class Lobby extends UI {
 
-	private int numberOfPlayers = 1, turnTime = 30;
-	private Level level;
+	private int numberOfPlayers = 1, roundTime = 15;
+	private Level level = Level.ent;
 
 	public Lobby() {
-		buttons = new Button[] { Button.numberOfPlayers, Button.roundTime, Button.level, Button.start };
+		buttons = new Button[] { Button.numberOfPlayers, Button.roundTime, Button.level, Button.start, Button.back };
 	}
 
 	@Override
 	public void tick() {
+
 		if (Game.mouse.getButton() == 1) {
 			Game.mouse.setMouseButton(-1);
+			int[] coords = Game.mouse.screenToWorld(false);
+			Button clickedButton = null;
 			for (Button b : buttons) {
-				Button clickedButton = b.onButton(Game.mouse.screenToWorld(Game.screen));
-				if (clickedButton == Button.numberOfPlayers) {
-					numberOfPlayers = (numberOfPlayers % 4) + 1;
-					Button.numberOfPlayers.text = Integer.toString(numberOfPlayers);
-				}
-				if (clickedButton == Button.start) {
-					Game.state = State.GAME;
+				clickedButton = b.onButton(coords);
+				if (clickedButton != null) {
+					break;
 				}
 			}
+
+			if (clickedButton == Button.numberOfPlayers) {
+				numberOfPlayers = (numberOfPlayers % 4) + 1;
+				Button.numberOfPlayers.text = Integer.toString(numberOfPlayers);
+			}
+			if (clickedButton == Button.roundTime) {
+				roundTime = (roundTime % 60) + 15;
+				Button.roundTime.text = Integer.toString(roundTime);
+			}
+			if (clickedButton == Button.level) {
+				
+			}
+			if (clickedButton == Button.start) {
+				GameController.state = State.GAME;
+			}
+			if (clickedButton == Button.back) {
+				GameController.state = State.MAINMENU;
+			}
 		}
+
 	}
 
 	@Override
 	public void render(Screen screen) {
-		screen.renderText("Number of Players", 10, 10, false);
-		Button.numberOfPlayers.render(10, 20, screen);
-		Button.start.render(10, 40, screen);
+		screen.renderText("Number of Players", 16, 16, false);
+		Button.numberOfPlayers.render(16, 26, screen);
 
+		screen.renderText("Round time", 16, 48, false);
+		Button.roundTime.render(16, 58, screen);
+
+		screen.renderText("Level", 16, 80, false);
+		Button.level.render(16, 90, screen);
+
+		Button.start.render(16, 128, screen);
+
+		Button.back.render(256, 128, screen);
+	}
+
+	public int getNumberOfPlayers() {
+		return numberOfPlayers;
+	}
+
+	public int getRoundTime() {
+		return roundTime;
+	}
+
+	public Level getlevel() {
+		return level;
 	}
 
 }

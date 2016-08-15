@@ -11,34 +11,31 @@ import javax.swing.JFrame;
 import graphics.Screen;
 import input.Keyboard;
 import input.Mouse;
-import level.Level;
-import ui.Menu;
 
 public class Game extends Canvas implements Runnable {
 
 	private JFrame frame;
 	private Thread thread;
-	private Level level;
 	private boolean running;
+	private GameController gc;
+
 	public static Screen screen;
-	public static State state;
 	public static Keyboard keys;
 	public static Mouse mouse;
 
 	private static final long serialVersionUID = 1L;
-	private static final int SCALE = 2;
-	public static final int RES_X = 640, RES_Y = 360;
+	public static final int SCALE = 2;
+	private static final int RES_X = 640, RES_Y = 360;
 
 	private BufferedImage image = new BufferedImage(RES_X, RES_Y, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
-	public Game() { 
+	public Game() {
 		Dimension res = new Dimension(RES_X * SCALE + 8, RES_Y * SCALE + 30);
 		screen = new Screen(RES_X, RES_Y);
 		keys = new Keyboard();
 		mouse = new Mouse();
-		state = State.MAINMENU;
-		level = Level.spawnlevel;
+		gc = new GameController();
 		frame = new JFrame("Game");
 		frame.setPreferredSize(res);
 		frame.setResizable(false);
@@ -71,7 +68,7 @@ public class Game extends Canvas implements Runnable {
 			frames++;
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				frame.setTitle("Ticks: " + updates + ", FPS: " + frames);
+				frame.setTitle("Ticks: " + updates + ", FPS: " + frames + ", Pre 0.0.1");
 				frames = 0;
 				updates = 0;
 			}
@@ -91,18 +88,11 @@ public class Game extends Canvas implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	} 
+	}
 
 	public void tick() {
 		keys.tick();
-		if (state == State.MAINMENU) {
-			Menu.main.tick();
-		} else if (state == State.LOBBY) {
-			Menu.lobby.tick();
-		} else if (state == State.GAME) {
-			level.tick();
-			screen.setOffset(level.getActivePlayer().x - RES_X / SCALE, level.getActivePlayer().y - RES_Y / SCALE);
-		}
+		gc.tick();
 	}
 
 	public void render() {
@@ -113,17 +103,7 @@ public class Game extends Canvas implements Runnable {
 		}
 
 		screen.clear();
-
-		if (state == State.MAINMENU) {
-			Menu.main.render(screen);
-		} else if (state == State.LOBBY) {
-			Menu.lobby.render(screen);
-		} else if (state == State.GAME) {
-			level.render(screen);
-		}
-
-		// screen.renderText("X:" + mouse.screenToWorld(screen)[0] + " Y:" +
-		// mouse.screenToWorld(screen)[1], 10, 10, false);
+		gc.render(screen);
 
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];

@@ -2,11 +2,11 @@ package ui;
 
 import graphics.Screen;
 
-public abstract class Menu {
+public abstract class UI {
 
-	public static Menu main = new Main();
-	public static Menu lobby = new Lobby();
-	
+	public static UI main = new Main();
+	public static Lobby lobby = new Lobby();
+
 	protected Button[] buttons;
 
 	public abstract void tick();

@@ -4,17 +4,19 @@ import graphics.Screen;
 import graphics.Sprite;
 
 public class Projectile extends Entity {
-	private int[] forceVector;
+	private double[] forceVector = new double[2];
 	private long time, deltaTime;
 	private final double gravity = -90;
 	private double xStart, yStart;
 
-	public Projectile(int x, int y, int[] forceVector) {
+	public Projectile(int x, int y, double[] forceVector, int scalar) {
 		this.x = x;
 		this.y = y;
 		xStart = x;
 		yStart = y;
-		this.forceVector = forceVector;
+		for(int i = 0; i < forceVector.length; i++){
+			this.forceVector[i] = forceVector[i] * scalar;
+		}
 		time = System.currentTimeMillis();
 	}
 
@@ -28,9 +30,8 @@ public class Projectile extends Entity {
 		}
 		deltaTime = System.currentTimeMillis() - time;
 		y = (int) (yStart + (forceVector[1] * deltaTime / 1000D)
-				- (1D / 2D) * gravity * Math.pow(deltaTime / 1000D, 2));
+				- (.5D) * gravity * Math.pow(deltaTime / 1000D, 2));
 		x = (int) (xStart + forceVector[0] * deltaTime / 1000D);
-
 	}
 
 	public void crater(int x, int y, int radius) {
@@ -40,7 +41,7 @@ public class Projectile extends Entity {
 			equationY = Math.sqrt(-Math.pow(i - radius, 2) + Math.pow(radius, 2));
 			for (int j = 0; j < equationY * 2; j++) {
 				try {
-					Sprite.ent.pixels[(x + i) + (y + j - (int) equationY) * Sprite.ent.getWidth()] = 0xFFFF00FF;
+					level.foreground.pixels[(x + i) + (y + j - (int) equationY) * level.foreground.getWidth()] = 0xFFFF00FF;
 				} catch (ArrayIndexOutOfBoundsException e) {
 					continue;
 				}
