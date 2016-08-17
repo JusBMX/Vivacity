@@ -16,8 +16,8 @@ public class GameController {
 			if (i == 0) {
 				player.active = true;
 			}
-			level.addEntity(player);
 			player.intit(level);
+			level.addEntity(player);
 		}
 	}
 	

@@ -6,7 +6,7 @@ import graphics.Sprite;
 public class Button {
 	private int width, height, x, y;
 	private Sprite sprite;
-	
+
 	public String text;
 
 	public static Button singleplayer = new Button(Sprite.button, "Singleplayer");
@@ -39,24 +39,12 @@ public class Button {
 		return null;
 	}
 
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
 	public int getwidth() {
 		return width;
 	}
 
 	public int getHieght() {
 		return height;
-	}
-
-	public Sprite getSprite() {
-		return sprite;
 	}
 
 }

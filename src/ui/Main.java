@@ -14,10 +14,9 @@ public class Main extends UI {
 	public void tick() {
 		if (Game.mouse.getButton() == 1) {
 			Game.mouse.setMouseButton(-1);
-			for (Button b : buttons) {
-				if (b.onButton(Game.mouse.screenToWorld(false)) == Button.singleplayer) {
-					GameController.state = State.LOBBY;
-				}
+			Button clickedButton = getClickedButton();
+			if (clickedButton == Button.singleplayer) {
+				GameController.state = State.LOBBY;
 			}
 		}
 	}

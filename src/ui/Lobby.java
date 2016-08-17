@@ -17,18 +17,9 @@ public class Lobby extends UI {
 
 	@Override
 	public void tick() {
-
 		if (Game.mouse.getButton() == 1) {
 			Game.mouse.setMouseButton(-1);
-			int[] coords = Game.mouse.screenToWorld(false);
-			Button clickedButton = null;
-			for (Button b : buttons) {
-				clickedButton = b.onButton(coords);
-				if (clickedButton != null) {
-					break;
-				}
-			}
-
+			Button clickedButton = getClickedButton();
 			if (clickedButton == Button.numberOfPlayers) {
 				numberOfPlayers = (numberOfPlayers % 4) + 1;
 				Button.numberOfPlayers.text = Integer.toString(numberOfPlayers);
@@ -38,7 +29,7 @@ public class Lobby extends UI {
 				Button.roundTime.text = Integer.toString(roundTime);
 			}
 			if (clickedButton == Button.level) {
-				
+
 			}
 			if (clickedButton == Button.start) {
 				GameController.state = State.GAME;
@@ -47,7 +38,6 @@ public class Lobby extends UI {
 				GameController.state = State.MAINMENU;
 			}
 		}
-
 	}
 
 	@Override

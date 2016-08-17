@@ -14,7 +14,7 @@ public class Projectile extends Entity {
 		this.y = y;
 		xStart = x;
 		yStart = y;
-		for(int i = 0; i < forceVector.length; i++){
+		for (int i = 0; i < forceVector.length; i++) {
 			this.forceVector[i] = forceVector[i] * scalar;
 		}
 		time = System.currentTimeMillis();
@@ -24,13 +24,13 @@ public class Projectile extends Entity {
 	public void tick() {
 		if (collision(x, y)) {
 			crater(x, y, 30);
+			level.generateCollisionMask();
 			damage(x, y, 30);
 			level.removeEntity(this);
 			return;
 		}
 		deltaTime = System.currentTimeMillis() - time;
-		y = (int) (yStart + (forceVector[1] * deltaTime / 1000D)
-				- (.5D) * gravity * Math.pow(deltaTime / 1000D, 2));
+		y = (int) (yStart + (forceVector[1] * deltaTime / 1000D) - (.5D) * gravity * Math.pow(deltaTime / 1000D, 2));
 		x = (int) (xStart + forceVector[0] * deltaTime / 1000D);
 	}
 
@@ -47,7 +47,6 @@ public class Projectile extends Entity {
 				}
 			}
 		}
-		level.generateCollisionMask();
 	}
 
 	public void damage(int x, int y, int maxDamage) {
@@ -59,7 +58,6 @@ public class Projectile extends Entity {
 	@Override
 	public void render(Screen screen) {
 		screen.renderSprite(x - Sprite.bomb.SIZE / 2, y - Sprite.bomb.SIZE / 2, Sprite.bomb, true);
-		screen.renderPoint(x, y, 0xFF00FF, true);
 	}
 
 }
