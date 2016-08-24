@@ -4,12 +4,12 @@ import app.Game;
 import app.GameController;
 import app.State;
 import graphics.Screen;
+import level.Ent;
 import level.Level;
 
 public class Lobby extends UI {
 
-	private int numberOfPlayers = 1, roundTime = 15;
-	private Level level = Level.ent;
+	private int numberOfPlayers = 1, roundTime = 15, level = 1;
 
 	public Lobby() {
 		buttons = new Button[] { Button.numberOfPlayers, Button.roundTime, Button.level, Button.start, Button.back };
@@ -29,7 +29,8 @@ public class Lobby extends UI {
 				Button.roundTime.text = Integer.toString(roundTime);
 			}
 			if (clickedButton == Button.level) {
-
+				level = (level % Level.levels.length) + 1;
+				Button.level.text = Level.levels[level - 1].name;
 			}
 			if (clickedButton == Button.start) {
 				GameController.state = State.GAME;
@@ -65,7 +66,7 @@ public class Lobby extends UI {
 	}
 
 	public Level getlevel() {
-		return level;
+		return Level.levels[level - 1];
 	}
 
 }

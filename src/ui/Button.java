@@ -4,6 +4,7 @@ import graphics.Screen;
 import graphics.Sprite;
 
 public class Button {
+	
 	private int width, height, x, y;
 	private Sprite sprite;
 
@@ -17,11 +18,21 @@ public class Button {
 	public static Button level = new Button(Sprite.button, "Ent");
 	public static Button start = new Button(Sprite.button, "Start");
 	public static Button back = new Button(Sprite.button, "Back");
+	
+	public static Button bomb = new Button(Sprite.bombUI);
+	public static Button fireBomb = new Button(Sprite.fireBombUI);
 
 	public Button(Sprite sprite, String text) {
 		this.width = Sprite.button.getWidth();
 		this.height = Sprite.button.getHeight();
 		this.text = text;
+		this.sprite = sprite;
+	}
+	
+	public Button(Sprite sprite) {
+		this.width = Sprite.button.getWidth();
+		this.height = Sprite.button.getHeight();
+		this.text = "";
 		this.sprite = sprite;
 	}
 

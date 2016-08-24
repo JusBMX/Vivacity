@@ -1,19 +1,25 @@
 package graphics;
 
 public class Sprite {
+	
 	private int x, y;
-	private SpriteSheet sheet;
-
-	public final int SIZE;
-	public int[] pixels;
+	public final int[] pixels;
 	private int width, height;
+	private SpriteSheet sheet;
+	private final int SIZE;
 
-	public static Sprite ent = new Sprite(512, 1024, 0, 0, SpriteSheet.level);
-	public static Sprite ent_bg = new Sprite(512, 1024, 0, 1, SpriteSheet.level);
+	public static Sprite ent = new Sprite(512, 1024, 0, 0, SpriteSheet.ent);
+	public static Sprite entBg = new Sprite(512, 1024, 0, 1, SpriteSheet.ent);
+	public static Sprite foundation = new Sprite(512, 1024, 0, 0, SpriteSheet.foundation);
+	public static Sprite foundationBg = new Sprite(512, 1024, 0, 1, SpriteSheet.foundation);
 	public static Sprite player = new Sprite(64, 0, 0, SpriteSheet.main);
 	public static Sprite bomb = new Sprite(16, 4, 0, SpriteSheet.main);
+	public static Sprite firebomb = new Sprite(16, 5, 0, SpriteSheet.main);
 	public static Sprite button = new Sprite(16, 64, 1, 2, SpriteSheet.main);
-
+	public static Sprite water = new Sprite(64, 2, 0, SpriteSheet.main);
+	
+	public static Sprite bombUI = new Sprite(16, 4, 1, SpriteSheet.main);
+	public static Sprite fireBombUI = new Sprite(16, 5, 1, SpriteSheet.main);
 
 	public Sprite(int size, int x, int y, SpriteSheet sheet) {
 		SIZE = size;
@@ -27,7 +33,7 @@ public class Sprite {
 	}
 
 	public Sprite(int height, int width, int x, int y, SpriteSheet sheet) {
-		SIZE = width;
+		SIZE = -1;
 		pixels = new int[height * width];
 		this.width = width;
 		this.height = height;
@@ -37,25 +43,10 @@ public class Sprite {
 		load();
 	}
 
-	public Sprite(int size, int color) {
-		SIZE = size;
-		this.width = size;
-		this.height = size;
-		pixels = new int[SIZE * SIZE];
-		setColor(color);
-
-	}
-
-	private void setColor(int color) {
-		for (int i = 0; i < width * height; i++) {
-			pixels[i] = color;
-		}
-	}
-
 	public void load() {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				pixels[x + y * SIZE] = sheet.pixels[(x + this.x) + (y + this.y) * sheet.SIZE];
+				pixels[x + y * width] = sheet.pixels[(x + this.x) + (y + this.y) * sheet.getSize()];
 			}
 		}
 	}

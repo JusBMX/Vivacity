@@ -7,20 +7,24 @@ import entity.Entity;
 import entity.Player;
 import graphics.Screen;
 import graphics.Sprite;
-import graphics.SpriteSheet;
+import ui.UI;
 
 public abstract class Level {
 
-	private int width, height;
-	public Sprite foreground;
-	public boolean[][] collisionMask;
+	protected int width;
+	protected int height;
+	private boolean[][] collisionMask;
+	protected List<Entity> entities;
 
-	private List<Entity> entities;
+	public String name = "";
 
-	public static Level ent = new Ent(Sprite.ent_bg, Sprite.ent);
+	public Sprite foreground, background;
+
+	public static Level[] levels = new Level[] { new Ent(), new Foundation() };
 
 	public Level(Sprite background, Sprite foreground) {
-		this.foreground = new Sprite(512, 1024, 0, 0, SpriteSheet.level);
+		this.foreground = foreground;
+		this.background = background;
 		width = foreground.getWidth();
 		height = foreground.getHeight();
 		collisionMask = new boolean[width][height];
@@ -31,19 +35,46 @@ public abstract class Level {
 			entities.get(i).tick();
 		}
 	}
-	
+
 	public void render(Screen screen) {
-		screen.renderSprite(0, 0, Sprite.ent_bg, false);
+		screen.renderSprite(0, 0, background, false);
 		screen.renderSprite(0, 0, foreground, true);
 		for (Entity e : entities) {
 			e.render(screen);
 		}
+		for (int i = 0; i < width / Sprite.water.getWidth(); i++) {
+			screen.renderSprite(i * Sprite.water.getWidth(), height - 32, Sprite.water, true);
+		}
 	}
-	
-	public void loadLevel() {
-		foreground = new Sprite(512, 1024, 0, 0, SpriteSheet.level);
-		generateCollisionMask();
-		entities = new ArrayList<Entity>();
+
+	public abstract void loadLevel();
+
+	public List<List<Integer>> spawnPoints() {
+		List<List<Integer>> listOLists  = new ArrayList<List<Integer>>();
+
+		for (int i = 0; i < collisionMask.length; i++) {
+			for (int j = 1; j < collisionMask[i].length; j++) {
+				if (collisionMask[i][j] && !collisionMask[i][j - 1]) {
+					List<Integer> xy = new ArrayList<Integer>();
+					xy.add(i);
+					xy.add(j);
+					listOLists.add(xy);
+				}
+			}
+		}
+		return listOLists;
+	}
+
+	public void loadPlayers() {
+		for (int i = 0; i < UI.lobby.getNumberOfPlayers(); i++) {
+			Player player = new Player();
+			if (i == 0) {
+				player.active = true;
+			}
+			player.intit(this);
+			addEntity(player);
+			player.spawn();
+		}
 	}
 
 	public void addEntity(Entity e) {
@@ -77,6 +108,25 @@ public abstract class Level {
 		return null;
 	}
 
+	public void switchplayers() {
+		for (Player p : getPlayers()) {
+			if (p.active) {
+				p.active = false;
+				p.mana = 100;
+				getPlayers().get((getPlayers().indexOf(p) + 1) % getPlayers().size()).active = true;
+				break;
+			}
+		}
+	}
+
+	public int getHeigth() {
+		return height;
+	}
+
+	public boolean[][] getCollisionMask() {
+		return collisionMask;
+	}
+
 	public void generateCollisionMask() {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
@@ -89,7 +139,8 @@ public abstract class Level {
 		}
 	}
 
-	public void generatePlayerCollisionMask() {
+	public void generatePlayerCollisionMask() {// TODO Change to use a different
+												// collisionMask
 		for (Player p : getPlayers()) {
 			if (p == getActivePlayer()) {
 				continue;
@@ -97,14 +148,13 @@ public abstract class Level {
 			for (int i = 0; i < Sprite.player.getWidth(); i++) {
 				for (int j = 0; j < Sprite.player.getHeight(); j++) {
 					if (Sprite.player.pixels[i + j * Sprite.player.getWidth()] == 0xFFFF00FF) {
-						collisionMask[i + p.x - Sprite.player.getWidth() / 2][j + p.y
-								- Sprite.player.getHeight() / 2] = false;
+						collisionMask[i + p.x - Sprite.player.getWidth() / 2][j + p.y - Sprite.player.getHeight() / 2] = false;
 					} else {
-						collisionMask[i + p.x - Sprite.player.getWidth() / 2][j + p.y
-								- Sprite.player.getHeight() / 2] = true;
+						collisionMask[i + p.x - Sprite.player.getWidth() / 2][j + p.y - Sprite.player.getHeight() / 2] = true;
 					}
 				}
 			}
 		}
 	}
+
 }

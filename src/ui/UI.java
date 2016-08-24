@@ -7,6 +7,7 @@ public abstract class UI {
 
 	public static UI main = new Main();
 	public static Lobby lobby = new Lobby();
+	public static Match match = new Match();
 
 	protected Button[] buttons;
 

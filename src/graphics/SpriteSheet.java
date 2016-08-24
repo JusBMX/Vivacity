@@ -7,11 +7,13 @@ import javax.imageio.ImageIO;
 
 public class SpriteSheet {
 	private final String PATH;
-	final int SIZE;
+	private final int SIZE;
 
 	public int[] pixels;
+
 	public static SpriteSheet font = new SpriteSheet("/Font.png", 128);
-	public static SpriteSheet level = new SpriteSheet("/level.png", 1024);
+	public static SpriteSheet ent = new SpriteSheet("/levels/ent.png", 1024);
+	public static SpriteSheet foundation = new SpriteSheet("/levels/foundation.png", 1024);
 	public static SpriteSheet main = new SpriteSheet("/main.png", 1024);
 
 	public SpriteSheet(String path, int size) {

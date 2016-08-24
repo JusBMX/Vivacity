@@ -24,7 +24,7 @@ public class Main extends UI {
 	public void render(Screen screen) {
 		int count = 0;
 		for (Button b : buttons) {
-			b.render(screen.width / 2 - b.getwidth() / 2, screen.height / 2 - b.getHieght() / 2 + (count * (b.getHieght() + 5)), screen);
+			b.render(screen.getWidth() / 2 - b.getwidth() / 2, screen.getHeight() / 2 - b.getHieght() / 2 + (count * (b.getHieght() + 5)), screen);
 			count++;
 		}
 	}

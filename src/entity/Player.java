@@ -1,52 +1,45 @@
 package entity;
 
+import java.util.Random;
+
 import app.Game;
+import entity.projectiles.*;
 import graphics.Screen;
 import graphics.Sprite;
 
 public class Player extends Entity {
 
 	public boolean active;
-	public int hp = 100;
+	public int hp = 100, mana = 100;
+	public boolean[] collisionMask;
+
+
 
 	private int force = 0;
 
-	private int yForceVector = 0, gravity = -90, yStart, yTemp;
-	private long time, deltaTime;
+	public boolean fire, addToForce;
 
-	private boolean fire, addToForce;
-
-	public boolean[] collisionMask;
-
-	public Player(int x, int y) {
-		this.x = x;
-		this.y = y;
-		time = System.currentTimeMillis();
+	public Player() {
 		yStart = y;
+		time = System.currentTimeMillis();
 	}
 
 	public void tick() {
 		deltaTime = System.currentTimeMillis() - time;
-		yTemp = (int) (yStart + (yForceVector * deltaTime / 1000D) - (.5D) * gravity * Math.pow(deltaTime / 1000D, 2));
-		
-		if (!collision(x, yTemp + 32)) {
-			y = yTemp;
+		if (!collision(x, calculatePosition()[1] + 32)) {
+			y = calculatePosition()[1];
 		} else {
-			yForceVector = 0;
+			forceVector[1] = 0;
 			yStart = y;
 			time = System.currentTimeMillis();
 		}
-		
 		if (active) {
 			if (Game.mouse.getButton() == 1) {
 				fire = true;
 				calculateForce();
 			}
 			if (Game.mouse.getButton() == -1 && fire) {
-				level.generatePlayerCollisionMask();
 				fireProjectile();
-				fire = false;
-				force = 0;
 			}
 			if (Game.keys.left) {
 				moveLeft();
@@ -54,18 +47,36 @@ public class Player extends Entity {
 			if (Game.keys.right) {
 				moveRight();
 			}
-			if (Game.keys.jump && collision(x, y + 33)) {
-				time = System.currentTimeMillis();
-				yStart = y;
-				yForceVector = -100;
+			if (Game.keys.jump) {
+				jump();
 			}
+		}
+		if (isOutOfBounds()) {
+			outOfBounds();
+		}
+		if (!isAlive()) {
+			playerDeath();
 		}
 	}
 
-	private void fireProjectile() {
-		Projectile bomb = new Projectile(x, y, Game.mouse.directionVector(x, y), force);
-		bomb.intit(level);
-		level.addEntity(bomb);
+	public boolean isAlive() {
+		if (hp < 1) {
+			return false;
+		}
+		return true;
+	}
+
+	public void fireProjectile() {
+	    Projectile projectile = new Bomb();
+		if (mana - projectile.mana >= 0) {
+			mana -= projectile.mana;
+			projectile.load(x, y, Game.mouse.directionVector(x, y, force));
+			level.generatePlayerCollisionMask();
+			projectile.intit(level);
+			level.addEntity(projectile);
+		}
+		fire = false;
+		force = 0;
 	}
 
 	private void calculateForce() {
@@ -103,13 +114,42 @@ public class Player extends Entity {
 	}
 
 	private void jump() {
-		// TODO write better physics for player.
+		if (collision(x, y + 33)) {
+			time = System.currentTimeMillis();
+			yStart = y;
+			forceVector[1] = -150;
+		}
 	}
 
 	@Override
 	public void render(Screen screen) {
-		screen.renderSprite(x - Sprite.player.getWidth() / 2, y - Sprite.player.getHeight() / 2, Sprite.player, true);
+		screen.renderSprite(x - Sprite.player.getWidth() / 2, y - Sprite.player.getHeight() / 2 + 1, Sprite.player, true);
+		if (active) {
+			screen.renderText("Force: " + Integer.toString(force), 10, 16, false);
+			screen.renderText("Mana: " + Integer.toString(mana), 10, 32, false);
+		}
 		screen.renderText(Integer.toString(hp), x, y - 20, true);
+	}
+
+	private void playerDeath() {
+		if (active) {
+			level.switchplayers();
+		}
+		level.removeEntity(this);
+	}
+	
+	public void spawn(){
+		int ran = new Random().nextInt(level.spawnPoints().size());
+		x = level.spawnPoints().get(ran).get(0);
+		y = level.spawnPoints().get(ran).get(1) - 33;
+		time = System.currentTimeMillis();
+		yStart = y;
+	}
+
+	@Override
+	public void outOfBounds() {
+		spawn();
+		hp -= 10;
 	}
 
 }
