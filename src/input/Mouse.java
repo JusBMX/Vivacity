@@ -68,11 +68,11 @@ public class Mouse implements MouseListener, MouseMotionListener {
 		return coords;
 	}
 
-	public double[] directionVector(int originX, int originY) {
+	public double[] directionVector(int originX, int originY, int scalar) {
 		double magnitue = Math.sqrt(Math.pow(screenToWorld(true)[0] - originX, 2) + Math.pow(screenToWorld(true)[1] - originY, 2));
 		double[] vector = new double[2];
-		vector[0] = (screenToWorld(true)[0] - originX) / magnitue;
-		vector[1] = (screenToWorld(true)[1] - originY) / magnitue;
+		vector[0] = scalar * (screenToWorld(true)[0] - originX) / magnitue;
+		vector[1] = scalar * (screenToWorld(true)[1] - originY) / magnitue;
 		return vector;
 	}
 

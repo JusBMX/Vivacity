@@ -9,6 +9,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import graphics.Screen;
+import graphics.Sprite;
 import input.Keyboard;
 import input.Mouse;
 
@@ -23,8 +24,8 @@ public class Game extends Canvas implements Runnable {
 	public static Keyboard keys;
 	public static Mouse mouse;
 
-	private static final long serialVersionUID = 1L;
 	public static final int SCALE = 2;
+	private static final long serialVersionUID = 1L;
 	private static final int RES_X = 640, RES_Y = 360;
 
 	private BufferedImage image = new BufferedImage(RES_X, RES_Y, BufferedImage.TYPE_INT_RGB);
@@ -68,7 +69,7 @@ public class Game extends Canvas implements Runnable {
 			frames++;
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				frame.setTitle("Ticks: " + updates + ", FPS: " + frames + ", Pre 0.0.1");
+				frame.setTitle("Ticks: " + updates + ", FPS: " + frames + ", Pre 0.0.2");
 				frames = 0;
 				updates = 0;
 			}

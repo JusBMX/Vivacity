@@ -1,11 +1,13 @@
 package graphics;
 
 public class Screen {
-	public int width, height;
+	
+	private int width, height;
+	
 	public int xOffset, yOffset;
 	public int[] pixels;
 
-	private static String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890.:-";
+	private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890.:-";
 
 	public Screen(int width, int height) {
 		this.width = width;
@@ -22,7 +24,7 @@ public class Screen {
 	public void renderText(String msg, int x, int y, boolean movable) {
 		msg = msg.toUpperCase();
 		for (int i = 0; i < msg.length(); i++) {
-			int charIndex = chars.indexOf(msg.charAt(i));
+			int charIndex = CHARS.indexOf(msg.charAt(i));
 			if (charIndex >= 0) {
 				renderSprite(x + (i * 8), y, new Sprite(8, charIndex % 16, charIndex / 16, SpriteSheet.font), movable);
 			}
@@ -62,4 +64,12 @@ public class Screen {
 		this.yOffset = yOffset;
 	}
 
+	public int getWidth(){
+		return width;
+	}
+	
+	public int getHeight(){
+		return height;
+	}
+	
 }

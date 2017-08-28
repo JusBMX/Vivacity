@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 public class Keyboard implements KeyListener {
 	private boolean[] keys = new boolean[255];
 
-	public boolean left, right, up, down, enter, escape, jump, use, debug;
+	public boolean left, right, up, down, enter, escape, jump, use, debug, one, two, three;
 
 	public void tick() {
 		left = keys[KeyEvent.VK_A];
@@ -18,6 +18,9 @@ public class Keyboard implements KeyListener {
 		jump = keys[KeyEvent.VK_SPACE];
 		use = keys[KeyEvent.VK_E];
 		debug = keys[KeyEvent.VK_BACK_QUOTE];
+		one = keys[KeyEvent.VK_1];
+		two = keys[KeyEvent.VK_2];
+		three = keys[KeyEvent.VK_3];
 	}
 
 	public void keyPressed(KeyEvent e) {
