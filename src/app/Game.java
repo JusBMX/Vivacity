@@ -32,13 +32,13 @@ public class Game extends Canvas implements Runnable {
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
 	public Game() {
-		Dimension res = new Dimension(RES_X * SCALE + 8, RES_Y * SCALE + 30);
+		Dimension res = new Dimension(RES_X * SCALE, RES_Y * SCALE);
 		screen = new Screen(RES_X, RES_Y);
 		keys = new Keyboard();
 		mouse = new Mouse();
 		gc = new GameController();
 		frame = new JFrame("Game");
-		frame.setPreferredSize(res);
+		setPreferredSize(res);
 		frame.setResizable(false);
 		frame.add(this);
 		frame.pack();

@@ -23,15 +23,15 @@ public class Button {
 	public static Button fireBomb = new Button(Sprite.fireBombUI);
 
 	public Button(Sprite sprite, String text) {
-		this.width = Sprite.button.getWidth();
-		this.height = Sprite.button.getHeight();
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
 		this.text = text;
 		this.sprite = sprite;
 	}
 	
 	public Button(Sprite sprite) {
-		this.width = Sprite.button.getWidth();
-		this.height = Sprite.button.getHeight();
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
 		this.text = "";
 		this.sprite = sprite;
 	}
